@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktiver Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #36393f;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            width: 500px;
+            height: 80vh;
+            background-color: #2f3136;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-header {
+            background-color: #202225;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: scroll;
+            border-bottom: 1px solid #444;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            background-color: #40444b;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background-color: #7289da;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 15px;
+            background-color: #40444b;
+        }
+
+        .input-container input {
+            width: 80%;
+            background-color: #555;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 1rem;
+            margin-right: 10px;
+        }
+
+        .input-container button {
+            background-color: #7289da;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .input-container button:hover {
+            background-color: #5b6e8b;
+        }
+
+        /* Styling für Animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .message {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>Öffentlicher Chat</h2>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Nachrichten werden hier erscheinen -->
+        </div>
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Nachricht eingeben..." />
+            <button onclick="sendMessage()">📝</button>
+        </div>
+    </div>
+
+    <script>
+        // Funktion um Nachricht zu senden
+        function sendMessage() {
+            const messageInput = document.getElementById("messageInput");
+            const messageText = messageInput.value.trim();
+
+            if (messageText !== "") {
+                // Erstellen einer neuen Nachricht
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", "user");
+                messageElement.textContent = messageText;
+
+                // Nachricht in den Chat einfügen
+                const chatMessages = document.getElementById("chatMessages");
+                chatMessages.appendChild(messageElement);
+
+                // Scrollen zum neuesten Beitrag
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Eingabefeld leeren
+                messageInput.value = "";
+            }
+        }
+
+        // Optional: Nachrichten bei Enter-Taste senden
+        document.getElementById("messageInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+
+        // Beispiel für die Anzeige von Nachrichten vom Server (hier nur simuliert)
+        function loadExampleMessages() {
+            const messages = [
+                { user: "Bot", text: "Willkommen im öffentlichen Chat!" },
+                { user: "Bot", text: "Stelle deine Fragen, und wir helfen dir!" },
+            ];
+
+            const chatMessages = document.getElementById("chatMessages");
+            messages.forEach(msg => {
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", "bot");
+                messageElement.textContent = msg.text;
+                chatMessages.appendChild(messageElement);
+            });
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Beim Laden der Seite Beispielnachrichten anzeigen
+        window.onload = loadExampleMessages;
+    </script>
+
+</body>
+</html>
